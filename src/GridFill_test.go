@@ -250,6 +250,35 @@ func TestUnitGridFill(t *testing.T) {
 				return assert.Equal(tc, expected, actual)
 			},
 		},
+		{
+			"base- 3x4 grid, divisible by 3,no solution",
+			Input{
+				3,
+				4,
+				[]Pos{
+					{1, 0},
+					{1, 2},
+					{1, 3},
+				},
+			},
+			nil,
+			func(tc *testing.T, expected, actual []Run) bool {
+				return assert.Equal(tc, expected, actual)
+			},
+		},
+		{
+			"base- 3000x10 grid for stress testing, ran 11.67 seconds locally",
+			Input{
+				3000,
+				10,
+				[]Pos{},
+			},
+			nil,
+			func(tc *testing.T, expected, actual []Run) bool {
+				// Change to assert.Equal for accurate time
+				return assert.NotNil(tc, actual)
+			},
+		},
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {

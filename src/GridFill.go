@@ -26,6 +26,21 @@ type Input struct {
 
 // -------------- Helpers ----------------------------
 
+// Check for collisions between two runs
+// True if collision
+func checkCollision(r1 Run, r2 Run) bool {
+	return !((r1.End.X < r2.Start.X || r1.Start.X > r2.End.X) || (r1.End.Y < r2.Start.Y || r1.Start.Y > r2.End.Y))
+}
+
+// Gets the number of available Tiles in grid
+func getSize(in Input) int {
+	size := in.Width * in.Height
+	size -= len(in.Tiles)
+	return size
+}
+
+// -------------- Main Functions -------------------------------------
+
 // Establish a grid with holes in correct places
 func createGrid(in Input) [][]int {
 	var grid = make([][]int, in.Width)
@@ -39,30 +54,7 @@ func createGrid(in Input) [][]int {
 	return grid
 }
 
-// Check for collisions between two runs
-// True if collision
-func checkCollision(r1 Run, r2 Run) bool {
-	// fmt.Println("Logic")
-	// fmt.Println(r1.End.X < r2.Start.X)
-	// fmt.Println(r1.Start.X > r2.End.X)
-	// fmt.Println(r1.End.Y < r2.Start.Y)
-	// fmt.Println(r1.Start.Y > r2.End.Y)
-	// fmt.Println(r1)
-	// fmt.Println(r2)
-	return !((r1.End.X < r2.Start.X || r1.Start.X > r2.End.X) || (r1.End.Y < r2.Start.Y || r1.Start.Y > r2.End.Y))
-}
-
-// Gets the number of available Tiles in grid
-func getSize(in Input) int {
-	size := in.Width * in.Height
-	size -= len(in.Tiles)
-	return size
-}
-
-// -------------- Main Functions -------------------------------------
-
 // Find all runs of n length, either horizontally or vertically
-// Assumes grid is has all rows equal size, and all columns equal size
 func getRuns(grid [][]int, n int) []Run {
 	var runs []Run
 	var horizontal = 0
@@ -116,8 +108,7 @@ func getRuns(grid [][]int, n int) []Run {
 }
 
 // Exhausts all combinations of runs, or until a solution is found
-// Assumes size 3 of blocks
-// Adds together
+// Assumes size 3x1 of blocks
 func coverGrid(size int, stack []Run, collector []Run) []Run {
 
 	tempCollector := make([]Run, len(collector))
